@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <form action="MainPage">
+            UserName:<input type="text" name="username" /><br/><br/>
+            <input type = "submit" value ="login" />
+        </form>
+    </body>
+</html>
+Index.html page
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.*;
+import java.io.*;
+/**
+ *
+ * @author Raghav Sood
+ */
+public class Filterpage implements Filter  {
+
+     String name;
+    public void init(FilterConfig arg0)
+           throws ServletException {}
+   public void doFilter(ServletRequest req,ServletResponse resp, FilterChain chain) throws IOException, ServletException
+   {
+       PrintWriter out = resp.getWriter();
+       
+       name = req.getParameter("username");
+        if(name.equals("Raghav Sood"))
+       {
+             chain.doFilter(req, resp);
+             //out.println("<h1>Servlet MSg After Level1  Filter.</h1>");
+       }
+        else
+       out.print("Invalid user Id.");
+   }
+   public void destroy() {
+       
+   }
+}
+Filter Page.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ *
+ * @author Raghav Sood
+ */
+public class MainPage extends HttpServlet {
+
+ 
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+           
+       response.setContentType("text/html");
+      String name = request.getParameter("username");
+        PrintWriter out = response.getWriter();
+        
+        out.println("<h1>Welcome to the main page "+ name +"</h1>");
+    }
+
+
+}
+Servlet Page.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
