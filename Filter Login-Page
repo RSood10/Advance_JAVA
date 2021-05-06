@@ -13,8 +13,25 @@ and open the template in the editor.
     <body>
         <form action="MainPage">
             UserName:<input type="text" name="username" /><br/><br/>
+            Password:<input type="password" name="pass" id="pass"/><br/>
+            Show Text<input type="checkbox"  onclick="toggle()"/><br/><br/>
             <input type = "submit" value ="login" />
         </form>
+        <script>
+            function toggle(){
+                
+                var y= document.getElementById("pass");
+                
+                if(y.type === "password")
+                {
+                    y.type="text";
+                }else
+                {
+                    y.type="password";
+                }
+            }
+            
+        </script>
     </body>
 </html>
 Index.html page
@@ -40,21 +57,25 @@ import java.io.*;
  */
 public class Filterpage implements Filter  {
 
-     String name;
+     String name, pass;
     public void init(FilterConfig arg0)
            throws ServletException {}
    public void doFilter(ServletRequest req,ServletResponse resp, FilterChain chain) throws IOException, ServletException
    {
        PrintWriter out = resp.getWriter();
-       
+       RequestDispatcher rd;
        name = req.getParameter("username");
-        if(name.equals("Raghav Sood"))
+       pass = req.getParameter("pass");
+        if(name.equals("Raghav Sood")&& pass.equals("1234"))
        {
              chain.doFilter(req, resp);
              //out.println("<h1>Servlet MSg After Level1  Filter.</h1>");
        }
         else
-       out.print("Invalid user Id.");
+        {
+            out.print("Invalid user Id.");
+        }
+       
    }
    public void destroy() {
        
