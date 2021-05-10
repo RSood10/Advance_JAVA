@@ -1,0 +1,70 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ *
+ * @author Raghav Sood
+ */
+public class formS extends HttpServlet {
+    String name,pass;
+
+  
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        PrintWriter out = response.getWriter();
+       
+       name = request.getParameter("username");
+       pass = request.getParameter("pass");
+       String Hidden = request.getParameter("hname");
+        if(name.equals("Raghav Sood")&& pass.equals("1234"))
+       {
+             out.print("<h1 align='center'>Welcome to Servlet no "+Hidden+"</h1>");
+             //out.println("<h1>Servlet MSg After Level1  Filter.</h1>");
+       }
+        else
+        {
+            out.print("Invalid user Id.");
+        }
+    }
+
+   
+}
+Servlet frameS
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Hidden Field</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <form action="formS">
+        <div>
+            UserName:<input type="text" name="username" /><br/><br/>
+            Password:<input type="password" name="pass" id="pass"/><br/>
+            <input type="Hidden" name="hname" value="007JB"/>
+            <input type = "submit" value ="login" />
+        </div>
+            </form>
+    </body>
+</html>
+HTML Index page.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+XmL file is const form, no further add-on's
