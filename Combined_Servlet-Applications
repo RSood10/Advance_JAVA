@@ -1,0 +1,266 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ *
+ * @author Raghav Sood
+ */
+public class Home extends HttpServlet {
+    String name,pass, hidden;
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+       try{
+           response.setContentType("text/html");
+       
+       // RequestDispatcher rd=request.getRequestDispatcher("UserDetails");
+        //servlet2 is the url-pattern of the second servlet.
+       //method may be include or forward.
+       PrintWriter out = response.getWriter();
+
+         name = request.getParameter("name");
+            pass = request.getParameter("pass");
+            
+            Cookie ck = new Cookie("uname",name);
+            response.addCookie(ck);
+            Cookie ck1 = new Cookie("pass",pass);
+            response.addCookie(ck1);
+            out.print("<h1>Welcome to Home Page of Program.</h1><br/>");
+            out.print("<h5>Click on button to see login Details</h5><br/>");
+              out.print("<form action='UserDetails'>");  
+              out.print("<input type='submit' value='Login Details'>");  
+              out.print("</form>");  
+             
+           /* out.print("<html>");
+            out.print("<body>");
+            out.print("<h1>Student Resistration Form Data</h1>");
+            out.print("<p> UserName :: " + name+ "</p>");
+            out.print("<p>Password ::"+pass+ "</p>");
+            out.print("</body>");
+            out.print("</html>");*/
+        //rd.forward(request, response);
+    }catch(IOException e){
+    System.out.print(e);
+    }
+        
+        
+}
+}
+Main Page
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import static java.lang.System.out;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ *
+ * @author Raghav Sood
+ */
+public class UserDetails extends HttpServlet {
+
+   
+    String name,pass;
+
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+         
+        try {
+            response.setContentType("text/html");
+            PrintWriter out = response.getWriter();
+           Cookie ck[] = request.getCookies();
+            Cookie ck1[]=request.getCookies();
+            name = ck[0].getValue();
+            pass = ck1[1].getValue();
+           
+            out.print("User Name :"+name+"<br/>");
+            out.print("Password :"+pass+"<br/>");
+            
+        }catch(IOException e)
+        {
+            out.print(e);
+        }
+    }
+
+    
+}
+2nd Servlet page
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ *
+ * @author Raghav Sood
+ */
+public class verifyfilter implements Filter {
+    String name,pass;
+     public void init(FilterConfig arg0)
+           throws ServletException {}
+   public void doFilter(ServletRequest req,ServletResponse resp, FilterChain chain) throws IOException, ServletException
+   {
+       
+       PrintWriter out = resp.getWriter();
+       
+       name = req.getParameter("name");
+       pass = req.getParameter("pass");
+       name = name.toLowerCase();
+       if(pass.equals("1234") && name.equals("raghav sood"))
+       {
+           RequestDispatcher rd=req.getRequestDispatcher("Home");  
+            chain.doFilter(req, resp);
+            out.print("Welcome"+name);  
+           out.print("Level 1 Filter is Ended.");
+           rd.forward(req, resp);
+       }
+       else
+       {
+            out.print("Incorrect Login Details.");  
+          
+       }
+       
+       
+       
+   }
+   public void destroy() {
+       
+   }
+
+    
+}
+Filter page
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>All Together</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div>
+            <form action="Home" method="post">
+                UserName:<input type="text" name="name" /><br/><br/>
+                Password:<input type="password" name="pass" id="pass"/><br/><br/>
+                <input type="Hidden" name="sname" value="D1Zy"/>
+             Show Text<input type="checkbox"  onclick="toggle()"/><br/><br/>
+            <input type = "submit" value ="login" />
+            </form>
+            <script>
+            function toggle(){
+                
+                var y= document.getElementById("pass");
+                
+                if(y.type === "password")
+                {
+                    y.type="text";
+                }else
+                {
+                    y.type="password";
+                }
+            }
+            
+        </script>
+        </div>
+    </body>
+</html>
+
+Html Page
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="4.0" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
+    <servlet>
+        <servlet-name>Home</servlet-name>
+        <servlet-class>Home</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UserDetails</servlet-name>
+        <servlet-class>UserDetails</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>verifyfilter</servlet-name>
+        <servlet-class>verifyfilter</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Home</servlet-name>
+        <url-pattern>/Home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UserDetails</servlet-name>
+        <url-pattern>/UserDetails</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>verifyfilter</servlet-name>
+        <url-pattern>/verifyfilter</url-pattern>
+    </servlet-mapping>
+     <filter>
+        <filter-name>verifyfilter</filter-name>
+        <filter-class>verifyfilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>verifyfilter</filter-name>
+        <url-pattern>/Home</url-pattern>
+    </filter-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+</web-app>
+
+                                                                                                    XML page
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
