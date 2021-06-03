@@ -1,0 +1,244 @@
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author Raghav Sood
+ */
+public class NewClass {
+     String na;
+     int pa;
+      String url = "jdbc:mysql://localhost:3306/company?autoReconnect=true&useSSL=false";
+      String user = "root";
+      String jpass = "soodraghav10";
+      int n;
+     int connects(String name,int p)
+     { 
+      
+       try{
+             na = name;
+              pa = p;
+         
+        Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+         
+        Connection conn = DriverManager.getConnection(url,user,jpass);
+
+         
+        Statement ps = conn.createStatement();
+          
+        ResultSet rs = ps.executeQuery("select name, age from data where name='"+ na +"' and age= "+pa+" " );
+         // System.out.println("done");
+           if(rs.next())
+           {
+              // System.out.println(rs.next());
+               n = 1;
+           }
+           else
+           {n =0;}
+           
+         }catch(ClassNotFoundException | IllegalAccessException | InstantiationException | SQLException e) 
+         {
+             System.out.println(e);
+         
+         }
+         return n;
+     }
+     
+     int New_User(String name, int pass)
+     {
+          try{
+             na = name;
+             pa = pass;
+         
+        Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+         
+        Connection conn = DriverManager.getConnection(url,user,jpass);
+
+         
+        Statement ps = conn.createStatement();
+          
+          ps.executeUpdate("insert into data(id,name,age) values("+110+",'"+ na +"',"+pa+")" );
+          System.out.println("done");
+            
+         }catch(ClassNotFoundException | IllegalAccessException | InstantiationException | SQLException e) 
+         {
+             System.out.println(e);
+         
+         }
+         return 0;
+     }
+}                                                                        Runnable Class with JDBC Call....
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+/**
+ *
+ * @author Raghav Sood
+ */
+@WebServlet(urlPatterns = {"/Home"})
+public class Home extends HttpServlet {
+
+   public String name ,pass ;
+   public int p;
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        PrintWriter out = response.getWriter();
+       /* String url = "jdbc:mysql://localhost:3306/company?autoReconnect=true&useSSL=false";
+        String user = "root";
+        String jpass = "soodraghav10";
+          Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+         
+        Connection conn = DriverManager.getConnection(url,user,jpass);
+        */
+        try {
+             response.setContentType("text/html");
+   
+        name = request.getParameter("name");
+        pass = request.getParameter("pass");
+
+       NewClass c = new NewClass();
+        int i =  c.connects(name, p);
+        boolean b = (i==c.connects(name, p));
+        if(b)
+        {
+            out.println("Welcome User");
+        }else
+        {
+            out.print("Invalid UserName or Pass");
+            RequestDispatcher rd = request.getRequestDispatcher("/index.html");
+            rd.include(request,response);
+        }
+      
+        }catch(Exception e)
+        {
+            out.print(e);
+        } 
+       
+        
+       }
+
+}                                                                       Login Servlet
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ *
+ * @author Raghav Sood
+ */
+public class Inpiut extends HttpServlet {
+
+      public String name ,pass ;
+      public int p;
+     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        PrintWriter out = response.getWriter();
+        
+        name = request.getParameter("newname");
+        pass = request.getParameter("newpass");
+        p  = Integer.parseInt(pass);
+        
+        
+        NewClass nc = new NewClass();
+        nc.New_User(name,p);
+        
+        out.print("Response Recorded....");
+        out.print("<h5><a href='index.html'/></h5>");
+        
+    }
+
+    
+}                                                                                User Input ...
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>jdbc conn</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <form action="./Home" method="get" >
+                UserName:<input type="text" name="name" /><br/><br/>
+                Password:<input type="password" name="pass" /><br/><br/>
+            <input type = "submit" value ="login" /><br/><br/>
+        </form>
+        <a href="User_Input.html">New User</a>
+    </body>
+</html>     
+                                                                          Index .html page...
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>User Details</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <form action="./Inpiut" method="get" >
+            <h1 align="center">Add User Details</h1><br/><br/>
+                UserName:<input type="text" name="newname" /><br/><br/>
+                Password:<input type="password" name="newpass" /><br/><br/>
+            <input type = "submit" value ="Done" /><br/><br/>
+        </form>
+    </body>
+</html> 
+                                                                        User Details .html page. . .
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
